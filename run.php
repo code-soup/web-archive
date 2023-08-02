@@ -1,6 +1,6 @@
 <?php
 
-namespace CodeSoupContentChangeLog;
+namespace CodeSoup\ContentChangeLog;
 
 // If this file is called directly, abort.
 defined('WPINC') || die;
@@ -15,7 +15,7 @@ require "vendor/autoload.php";
  */
 function plugin_instance() {
 
-    return \CodeSoupContentChangeLog\Init::get_instance();
+    return \CodeSoup\ContentChangeLog\Init::get_instance();
 }
 
 // Init plugin and make instance globally available

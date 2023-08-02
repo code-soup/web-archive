@@ -1,6 +1,6 @@
 <?php
 
-namespace CodeSoupContentChangeLog\Frontend;
+namespace CodeSoup\ContentChangeLog\Frontend;
 
 // Exit if accessed directly
 defined( 'WPINC' ) || die;
@@ -15,7 +15,7 @@ defined( 'WPINC' ) || die;
 class Init {
 
 
-    use \CodeSoupContentChangeLog\Traits\HelpersTrait;
+    use \CodeSoup\ContentChangeLog\Traits\HelpersTrait;
 
 
     // Main plugin instance
@@ -34,7 +34,7 @@ class Init {
     public function __construct() {
 
         // Main plugin instance
-        $instance     = \CodeSoupContentChangeLog\plugin_instance();
+        $instance     = \CodeSoup\ContentChangeLog\plugin_instance();
         $hooker       = $instance->get_hooker();
         $this->assets = $instance->get_assets();
 

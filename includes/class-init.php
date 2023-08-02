@@ -1,6 +1,6 @@
 <?php
 
-namespace CodeSoupContentChangeLog;
+namespace CodeSoup\ContentChangeLog;
 
 // Exit if accessed directly
 defined( 'WPINC' ) || die;
