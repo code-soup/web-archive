@@ -36,6 +36,7 @@ final class Init {
 		'PLUGIN_PREFIX'                => 'ccl',
 		'PLUGIN_NAME'                  => 'Content ChangeLog',
 		'PLUGIN_VERSION'               => '0.0.1',
+		'SNAPSHOTS_BASE_DIR'           => WP_CONTENT_DIR . '/content-changelog/snapshots'
 	);
 
 
@@ -123,13 +124,16 @@ final class Init {
 		$this->assets = new Assets();
 
 		// Internationalizations.
-		new I18n();
+		// new I18n();
 
 		// WP Admin related stuff.
-		new Admin\Init();
+		// new Admin\Init();
+
+		// Init class
+		new Core\Init();
 
 		// Public related stuff.
-		new Frontend\Init();
+		// new Frontend\Init();
 
 		// Run all hooks
 		$this->run();

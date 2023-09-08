@@ -33,7 +33,8 @@
 	"require": {
 		"php": ">=7.4.0",
 		"composer/installers": "^2.2.0",
-		"vlucas/phpdotenv": "^5.5"
+		"vlucas/phpdotenv": "^5.5",
+		"guzzlehttp/guzzle": "^7.0"
 	},
 	"require-dev": {
 		"wp-coding-standards/wpcs": "*",
