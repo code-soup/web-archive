@@ -1,6 +1,6 @@
 <?php
 
-namespace CodeSoup\ContentChangeLog\Core;
+namespace CodeSoup\WebArchive\Core;
 
 // Exit if accessed directly
 defined( 'WPINC' ) || die;
@@ -15,7 +15,7 @@ defined( 'WPINC' ) || die;
  */
 class Init {
 
-	use \CodeSoup\ContentChangeLog\Traits\HelpersTrait;
+	use \CodeSoup\WebArchive\Traits\HelpersTrait;
 
 	// Main plugin instance.
 	protected static $instance = null;
@@ -23,6 +23,9 @@ class Init {
 	
 	// Assets loader class.
 	protected $assets;
+
+
+	private $types;
 
 
 	/**
@@ -33,14 +36,56 @@ class Init {
 	public function __construct() {
 
 		// Main plugin instance.
-		$instance     = \CodeSoup\ContentChangeLog\plugin_instance();
+		$instance     = \CodeSoup\WebArchive\plugin_instance();
 		$hooker       = $instance->get_hooker();
 		$this->assets = $instance->get_assets();
 
 		$hooker->add_action( 'init', $this );
 		$hooker->add_action( 'admin_menu', $this );
+
+		$hooker->add_action( 'transition_post_status', $this, 'transition_post_status', 10, 3 );
+		$hooker->add_action( 'webarchive_create_snapshot', $this, 'webarchive_create_snapshot', 10, 3 );
+
+		$hooker->add_action( 'rest_api_init', $this);
 	}
 
+	public function rest_api_init() {
+
+        $rest = new SnapshotController();
+        $rest->register_routes();
+    }
+
+
+	/**
+     * Log status transition
+     */
+    public function transition_post_status($new_status, $old_status, $post)
+    {
+    	if ( empty($post) )
+    		return;
+
+        $snap = new Snapshot();
+        $snap->create_log_entry( $new_status, $old_status, $post );
+    }
+
+
+
+    /**
+     * Create
+     * @param  [type] $post [description]
+     * @param  [type] $time [description]
+     * @return [type]       [description]
+     */
+    public function webarchive_create_snapshot( $snapshot_id ) {
+
+    	if ( empty($snapshot_id) )
+    		return;
+
+        $snap = new Snapshot();
+        $snap->save_html_snapshot( $snapshot_id );
+    }
+
+	
 	/**
 	 * Register Post types & Taxonomies
 	 */
@@ -67,37 +112,35 @@ class Init {
 	public function admin_menu() {
 
 		add_menu_page(
-	        'Content ChangeLog',
-	        'ChangeLog',
+	        'Web Archive',
+	        'Web Archive',
 	        'manage_snapshots',
-	        'content-changelog',
-	        array( &$this, 'change_log_dashboard'),
+	        'web-archive',
+	        array( &$this, 'render_dashboard'),
 	        'dashicons-welcome-view-site'
 	    );
 
 	    add_submenu_page(
-	        'content-changelog',
+	        'web-archive',
 	        'Dashboard',
 	        'Dashboard',
-	        'manage_content_changelog',
-	        'dashboard',
-	        array( &$this, 'change_log_dashboard'),
+	        'manage_webarchive',
+	        'web-archive',
+	        array( &$this, 'render_dashboard'),
 	    );
 
 	    add_submenu_page(
-	        'content-changelog',
+	        'web-archive',
 	        'Settings',
 	        'Settings',
-	        'manage_content_changelog',
+	        'manage_webarchive',
 	        'settings',
-	        array( &$this, 'change_log_dashboard'),
+	        array( &$this, 'render_dashboard'),
 	    );
 	}
 
-	// Function to create the subpage content
-	function change_log_dashboard() {
-    	// Add your dashboard content here
-    	echo '<h1>ChangeLog Dashboard</h1>';
+	function render_dashboard() {
+    	printf('<div id="web-archive-app"></div>');
 	}
 
 
@@ -123,7 +166,7 @@ class Init {
             'edit_private_snapshots',
             'edit_published_snapshots',
             'manage_snapshots',
-            'manage_content_changelog',
+            'manage_webarchive',
         );
 
         add_role('compliance_admin', 'Compliance Admin', $admin_caps);

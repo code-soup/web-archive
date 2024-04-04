@@ -1,6 +1,6 @@
 <?php
 
-namespace CodeSoup\ContentChangeLog;
+namespace CodeSoup\WebArchive;
 
 // If this file is called directly, abort.
 // Web Archiver
@@ -16,20 +16,9 @@ require "vendor/autoload.php";
 */
 function plugin_instance() {
 
-    return \CodeSoup\ContentChangeLog\Init::get_instance();
+    return \CodeSoup\WebArchive\Init::get_instance();
 }
 
 // Init plugin and make instance globally available
 $plugin = plugin_instance();
 $plugin->init();
-
-
-add_action( 'init', function() {
-
-    // Homepage
-    if ( ! empty($_GET['wtf-loop']) )
-    {
-        $snap = new \CodeSoup\ContentChangeLog\Core\Snapshot( 10357 );
-        $snap->create_snapshot();
-    }
-});

@@ -4,6 +4,8 @@
 const config = require('../config');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const svgToMiniDataURI = require('mini-svg-data-uri');
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+const isDevelopment = process.env.NODE_ENV !== 'production';
 
 module.exports = {
     rules: [
@@ -14,9 +16,16 @@ module.exports = {
             loader: 'import-glob',
         },
         {
-            test: /\.js$/,
+            test: /\.(js|jsx)$/,
             exclude: [/node_modules/],
-            use: [{ loader: 'babel-loader' }],
+            use: {
+                loader: 'babel-loader',
+                options: {
+                    plugins: [
+                        isDevelopment && require.resolve('react-refresh/babel'),
+                    ].filter(Boolean),
+                },
+            },
         },
         {
             test: /\.s?[ca]ss$/,

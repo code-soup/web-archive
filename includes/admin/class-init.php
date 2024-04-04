@@ -1,6 +1,6 @@
 <?php
 
-namespace CodeSoup\ContentChangeLog\Admin;
+namespace CodeSoup\WebArchive\Admin;
 
 // Exit if accessed directly
 defined( 'WPINC' ) || die;
@@ -15,7 +15,7 @@ defined( 'WPINC' ) || die;
  */
 class Init {
 
-	use \CodeSoup\ContentChangeLog\Traits\HelpersTrait;
+	use \CodeSoup\WebArchive\Traits\HelpersTrait;
 
 	// Main plugin instance.
 	protected static $instance = null;
@@ -23,6 +23,9 @@ class Init {
 	
 	// Assets loader class.
 	protected $assets;
+
+
+	protected $screen;
 
 
 	/**
@@ -33,9 +36,10 @@ class Init {
 	public function __construct() {
 
 		// Main plugin instance.
-		$instance     = \CodeSoup\ContentChangeLog\plugin_instance();
+		$instance     = \CodeSoup\WebArchive\plugin_instance();
 		$hooker       = $instance->get_hooker();
 		$this->assets = $instance->get_assets();
+		$this->screen = empty($_GET['page']) ? null : sanitize_title( $_GET['page'] );
 
 		// Admin hooks.
 		$hooker->add_action( 'admin_enqueue_scripts', $this, 'enqueue_styles' );
@@ -49,9 +53,12 @@ class Init {
 	 */
 	public function enqueue_styles() {
 
+		if ( 'web-archive' !== $this->screen )
+			return;
+
 		wp_enqueue_style(
 			$this->get_plugin_id('/wp/css'),
-			$this->assets->get('admin.css'),
+			$this->assets->get('styles/admin.css'),
 			array(),
 			$this->get_plugin_version(),
 			'all'
@@ -65,11 +72,14 @@ class Init {
 	 */
 	public function enqueue_scripts() {
 
+		if ( 'web-archive' !== $this->screen )
+			return;
+
 		$script_id = $this->get_plugin_id('/wp/js');
 
 		wp_enqueue_script(
 			$script_id,
-			$this->assets->get('admin.js'),
+			wp_make_link_relative( $this->assets->get('scripts/admin.js') ),
 			array(),
 			$this->get_plugin_version(),
 			false
@@ -77,9 +87,10 @@ class Init {
 
 		wp_localize_script(
             $script_id,
-            'ccl',
+            'WebArchive',
             array(
-                'nonce'    => wp_create_nonce( 'ccl_wp_xhr_nonce' ),
+            	'root'     => get_rest_url(),
+                'nonce'    => wp_create_nonce( 'wa_wp_nonce' ),
                 'ajax_url' => admin_url( 'admin-ajax.php' ),
                 'post_id'  => get_the_ID(),
             )

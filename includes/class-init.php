@@ -1,6 +1,6 @@
 <?php
 
-namespace CodeSoup\ContentChangeLog;
+namespace CodeSoup\WebArchive;
 
 // Exit if accessed directly
 defined( 'WPINC' ) || die;
@@ -31,12 +31,15 @@ final class Init {
 	private $constants = array(
 		'MIN_WP_VERSION_SUPPORT_TERMS' => '6.0',
 		'MIN_WP_VERSION'               => '6.0',
-		'MIN_PHP_VERSION'              => '7.4',
+		'MIN_PHP_VERSION'              => '8.1',
 		'MIN_MYSQL_VERSION'            => '',
-		'PLUGIN_PREFIX'                => 'ccl',
-		'PLUGIN_NAME'                  => 'Content ChangeLog',
+		'PLUGIN_PREFIX'                => 'wa',
+		'PLUGIN_NAME'                  => 'Web Archive',
 		'PLUGIN_VERSION'               => '0.0.1',
-		'SNAPSHOTS_BASE_DIR'           => WP_CONTENT_DIR . '/content-changelog/snapshots'
+		'SNAPSHOTS_BASE_DIR'           => WP_CONTENT_DIR . '/web-archive/snapshots',
+		'SNAPSHOTS_UPLOADS_DIR'        => WP_CONTENT_DIR . '/web-archive/snapshots/uploads',
+		'SNAPSHOTS_BASE_URI'           => '/web-archive/snapshots',
+		'SNAPSHOTS_UPLOADS_URI'        => WP_CONTENT_URL . '/web-archive/snapshots/uploads',
 	);
 
 
@@ -127,7 +130,7 @@ final class Init {
 		// new I18n();
 
 		// WP Admin related stuff.
-		// new Admin\Init();
+		new Admin\Init();
 
 		// Init class
 		new Core\Init();

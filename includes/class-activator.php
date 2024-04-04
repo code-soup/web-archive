@@ -1,6 +1,6 @@
 <?php
 
-namespace CodeSoup\ContentChangeLog;
+namespace CodeSoup\WebArchive;
 
 // Exit if accessed directly.
 defined( 'WPINC' ) || die;
@@ -16,6 +16,6 @@ class Activator {
 
     public static function activate() {
         
-        \CodeSoup\ContentChangeLog\Core\Init::capabilities_setup();
+        \CodeSoup\WebArchive\Core\Init::capabilities_setup();
     }
 }

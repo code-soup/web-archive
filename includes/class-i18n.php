@@ -1,6 +1,6 @@
 <?php
 
-namespace CodeSoup\ContentChangeLog;
+namespace CodeSoup\WebArchive;
 
 // Exit if accessed directly
 defined( 'WPINC' ) || die;
@@ -39,7 +39,7 @@ class I18n {
 	public function load_textdomain() {
 
 		load_plugin_textdomain(
-			'ccl',
+			'web-archive',
 			false,
 			'/languages'
 		);

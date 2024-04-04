@@ -10,10 +10,11 @@ if (url.parse(process.env.WP_DEV_URL).protocol === 'https:') {
 
 module.exports = {
     devServer: {
-        hot: true,
         port: process.env.DEV_PROXY_PORT,
         compress: true,
         allowedHosts: 'all',
+        hot: true, // Enable hot reloading
+        liveReload: false,
         watchFiles: {
             paths: ['templates/**/*.php', 'includes/**/*', 'src/**/*'],
             options: {
@@ -22,19 +23,25 @@ module.exports = {
         },
         client: {
             logging: 'info',
-            overlay: true,
+            overlay: false,
         },
         static: {
             directory: config.paths.dist,
             publicPath: config.paths.publicPath,
             serveIndex: false,
         },
-        proxy: {
-            '/': {
+        proxy: [
+            {
+                context: ['/'],
                 target: process.env.WP_DEV_URL,
                 changeOrigin: true,
                 autoRewrite: true,
             },
+        ],
+        devMiddleware: {
+            publicPath: config.paths.publicPath,
+            serverSideRender: false,
+            writeToDisk: true,
         },
     },
 };
