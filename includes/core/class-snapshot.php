@@ -5,7 +5,7 @@ namespace CodeSoup\WebArchive\Core;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Uri;
 use voku\helper\HtmlDomParser;
-use CodeSoup\WebArchive\DOMNodeProcessor\Utils;
+use CodeSoup\WebArchive\Utils\DOMNodeProcessor;
 
 // Exit if accessed directly
 defined( 'WPINC' ) || die;

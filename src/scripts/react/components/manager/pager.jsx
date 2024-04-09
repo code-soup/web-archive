@@ -15,7 +15,12 @@ const SnapshotPager = ({ args, snapshots, onPageSelect }) => {
 	}, [snapshots]);
 
 	// Remove pager from dom
-	if (snapshots.found === 0) {
+	if (items.length === 0) {
+		return;
+	}
+
+	// Remove pager from dom
+	if (items.found === 0) {
 		return;
 	}
 
@@ -32,7 +37,6 @@ const SnapshotPager = ({ args, snapshots, onPageSelect }) => {
 	};
 
 	const goToPage = (event, anchorElement) => {
-		// console.log(event, anchorElement);
 		event.preventDefault();
 
 		const pageNumber = parseInt(anchorElement.getAttribute('data-page'));

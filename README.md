@@ -1,4 +1,5 @@
-=== Web Archive ===
+# Web Archive
+
 Contributors: codesoup
 Tags: backup, archive, versioning
 Requires at least: 5.2
