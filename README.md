@@ -1,51 +1,54 @@
-# Web Archive: Wayback Machine WordPress Plugin
+=== Web Archive ===
+Contributors: codesoup
+Tags: backup, archive, versioning
+Requires at least: 5.2
+Tested up to: 5.7
+Requires PHP: 8.1
+Stable tag: 1.0.0
+License: GPL-2.0-or-later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+
+Automatically creates HTML copies of your posts and pages when they're published, allowing you to track every version.
 
 ## Description
 
-The Wayback Machine WordPress Plugin provides a functionality similar to the popular Wayback Machine website (https://web.archive.org). It allows users to access historical versions of their WordPress website content, providing a snapshot of how the website looked and functioned at different points in time.
+The Web Archive plugin for WordPress provides a simple yet powerful way to create HTML copies of pages or any post type upon their publication. This functionality allows website owners and administrators to keep track of all previous versions of the same page or post, ensuring that changes, updates, and iterations are recorded and retrievable at any moment. This is especially useful for content management, auditing, and compliance purposes.
 
 ## Features
 
--   View historical versions of website pages.
--   Navigate through snapshots of the website at different points in time.
--   Easy installation and setup within WordPress admin panel.
--   Customizable settings to control the frequency of snapshots and storage options.
--   Compatible with most WordPress themes and plugins.
+-   **Automatic Archiving:** Automatically creates an HTML copy of a page or post when it is published or updated.
+-   **Custom Post Type Support:** Works with any WordPress post type, including custom post types, offering flexibility in archiving various content.
+-   **Archive Management:** Easy-to-use interface to view archived versions directly from the WordPress admin dashboard.
+-   **Performance Optimized:** Designed with performance in mind, ensuring minimal impact on site speed.
 
 ## Installation
 
-1. Download the plugin zip file from the releases section.
-2. In your WordPress admin panel, navigate to Plugins -> Add New.
-3. Click on the "Upload Plugin" button and upload the plugin zip file.
-4. Activate the plugin through the 'Plugins' menu in WordPress.
+1. **Upload Plugin:** Download the Web Archive plugin and upload it to your WordPress website via the WordPress Dashboard under Plugins > Add New > Upload Plugin.
+2. **Activate:** Once uploaded, activate the Web Archive plugin through the 'Plugins' menu in WordPress.
+3. **Configuration:** Access the Web Archive settings through the WordPress dashboard to configure any options according to your needs.
 
 ## Usage
 
-1. Once activated, the Wayback Machine functionality will be available for use.
-2. Navigate to the Wayback Machine section in the WordPress admin panel.
-3. Use the interface to view historical snapshots of your website pages.
-4. Select a date to view the website as it appeared on that day.
-5. Optionally, configure plugin settings to adjust snapshot frequency and storage options.
+Once activated, the Web Archive plugin works automatically. Every time a post or page is published or updated, an HTML copy is created and stored. These copies can be accessed through the Web Archive menu in the WordPress dashboard.
 
-## Configuration
+## Frequently Asked Questions
 
--   Navigate to Settings -> Wayback Machine to configure plugin settings.
--   Adjust snapshot frequency and storage options according to your preferences.
--   Customize other settings as needed to fit your website's requirements.
+**Q: Does Web Archive slow down my website?**
+A: No, Web Archive is designed to operate with minimal performance impact, ensuring your site remains fast and responsive.
+
+**Q: Can I archive custom post types?**
+A: Yes, Web Archive supports all post types, including custom ones, giving you complete archiving flexibility.
+
+## Changelog
+
+### 1.0.0
+
+-   Initial release: Basic archiving functionality for all public post types
 
 ## Support
 
-For support or inquiries, please contact [Your Support Email Address].
+For questions, issues, and support regarding the Web Archive plugin, please visit the [plugin support forum](#).
 
 ## License
 
-This plugin is licensed under the [License Name] License. See the LICENSE file for details.
-
-## Contributing
-
-Contributions are welcome! Feel free to submit pull requests or report any issues on the GitHub repository.
-
-## Acknowledgments
-
--   This plugin was inspired by the functionality of the Wayback Machine website.
--   Special thanks to contributors and supporters who helped in the development and testing of this plugin.
+The Web Archive plugin is open-source software licensed under the GPL v2.0 license.

@@ -5,6 +5,7 @@ namespace CodeSoup\WebArchive\Core;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Uri;
 use voku\helper\HtmlDomParser;
+use CodeSoup\WebArchive\DOMNodeProcessor\Utils;
 
 // Exit if accessed directly
 defined( 'WPINC' ) || die;
@@ -15,32 +16,15 @@ class Snapshot {
 
     private $post;
 
-    private $path;
+    private $dirs;
 
     private $args;
 
-    private $nonce_action = 'create_uri_snapshot';
-
     private $post_types = array();
-
-    private $fs;
-
-    private $path_base;
-
-    private $path_assets;
-
-    private $path_json;
-
-    private $uri_base;
-
-    private $uri_assets;
-
-    private $path_wp;
 
     public function __construct( $args = array() )
     {
         $this->args       = $args;
-        $this->path_wp    = wp_upload_dir();
         $this->post_types = array(
             'document',
             'drops',
@@ -87,7 +71,7 @@ class Snapshot {
         if ( 'publish' !== $new_status && 'publish' !== $old_status )
             return;
 
-        $time = time();
+        $time = gmdate('U');
 
         /**
          * Format required user data
@@ -148,8 +132,8 @@ class Snapshot {
             'post_name'      => $time,
             'post_type'      => 'snapshot',
             'post_status'    => 'pending',
-            'post_excerpt'   => json_encode( $_user ),
-            'post_content'   => json_encode( $_post ),
+            'post_excerpt'   => wp_json_encode( $_user ),
+            'post_content'   => wp_json_encode( $_post ),
             'post_author'    => $user->ID,
             'post_parent'    => $post->ID,
             'post_mime_type' => 'application/json',
@@ -174,7 +158,7 @@ class Snapshot {
         $wpdb->update(
             $wpdb->posts,
             array(
-                'guid' => $this->uri_base . '/index.html',
+                'guid' => $this->dirs['snapshot_uri'] . '/index.html',
             ),
             array( 'ID' => $snapshot_id ),
             array(
@@ -188,346 +172,110 @@ class Snapshot {
     /**
      * Save HTML version of page
      */
-    public function save_html_snapshot( $snapshot_id ) {
+    public function do_snapshot( $snapshot_id ) {
 
-        $this->fs = new \WP_Filesystem_Direct('');
-        
         // Log Entry
         $snapshot = get_post( $snapshot_id );
 
         if ( empty($snapshot) )
         {
-            error_log( sprintf('WP_Post not found, ID: %d', $snapshot_id) );
+            // error_log( sprintf('WP_Post not found, ID: %d', $snapshot_id) );
             return;
         }
+
+        $fs = new \WP_Filesystem_Direct('');
 
         // Original WP_Post
         $wp_post = json_decode( $snapshot->post_content, true );
 
         // Generate Snapshot directory
-        $this->generate_snapshot_directory( $snapshot, time() );
+        $this->generate_snapshot_directory( $wp_post['ID'] );
 
         // Directory where HTML snapshot is saved
         $this->update_snapshot_guid( $snapshot_id );
 
-        // Save All meta data
-        $this->save_snapshot_json( $snapshot );
-
-        // Generate the permalink from the post ID
-        $permalink = home_url( wp_make_link_relative( get_permalink( $wp_post['ID'] ) ) );
-
         // Fetch the WordPress post content using GuzzleHttp
-        $page_content = $this->fetch_page_content($permalink);
+        $this->save_to_disk( $wp_post['ID'], $fs );
 
-        // Save all assets (images, CSS, scripts, fonts, videos)
-        $this->save_assets($page_content);
+        /**
+         * Save JSON WP_Post and postmeta data
+         */
+        $_meta = wp_json_encode( get_post_meta( $wp_post['ID'] ) );
+
+        $fs->put_contents( "{$this->dirs['json_path']}/meta.json", $_meta );
+        $fs->put_contents( "{$this->dirs['json_path']}/post.json", $snapshot->post_content );
     }
 
 
     
     /**
-     * Fetch page content
-     * 
-     * @param  string $permalink
-     * 
-     * @return mixed            
+     * Fetch page content   
      */
-    private function fetch_page_content($permalink) {
+    private function save_to_disk($post_id, $fs) {
 
-        $client  = new Client();
-        $headers = array(
-            'User-Agent' => 'WPWebArchive/' . $this->get_plugin_version(),
-            'X-WP-Nonce' => wp_create_nonce($this->nonce_action),
-        );
-
-        $response = $client->request('GET', $permalink, [
-            'headers' => $headers
-        ]);
-
-        return $response->getBody()->getContents();
-    }
-
-
-
-    private function save_snapshot_json( $wp_post ) {
-
-        $meta = json_encode( get_post_meta( $wp_post->ID ) );
-        $post = json_encode( $wp_post );
-
-        $this->fs->put_contents( $this->path_json . '/meta.json', $meta );
-        $this->fs->put_contents( $this->path_json . '/post.json', $post );
-    }
-
-
-    
-    private function save_assets($page_content) {
-
-        $dom = HtmlDomParser::str_get_html($page_content);
-        
-        // Assets to save
-        $assets = array(
-            'css'     => 'link',
-            'scripts' => 'script',
-            'images'  => 'img',
-            // 'meta'    => 'meta',
-            'videos'  => 'video',
-        );
-
-        foreach ( $assets as $type => $tag )
-        {
-            $nodes = $dom->getElementsByTagName( $tag );
-            
-            foreach ( $nodes as $node )
-            {
-                $this->save_file($node, $type);
-            }
-        }
-
-        $html = $dom->save();
-        $this->fs->put_contents( $this->path_base . '/index.html', $html );
-    }
-
-
-    /**
-     * Save file to disk
-     * 
-     * @param  DOMNode $node   
-     * @param  string $type 
-     * @return [type]       
-     */
-    private function save_file( $node, string $tag ) {
-
-        $src    = '';
-        $srcset = '';
-        $uris   = array();
-
-        switch ( $tag )
-        {
-            case 'link':
-                $uris[] = $node->getAttribute('href');
-            break;
-
-            case 'meta':
-                $uris[] = $node->getAttribute('content');
-            break;
-
-            default:
-                $uris[] = $node->getAttribute('src');
-                $srcset = $node->getAttribute('srcset');
-
-                // Get from srcset
-                foreach ( explode(' ', $srcset) as $item )
-                {
-                    if ( $this->isImageFile($item) ) {
-                        $uris[] = $item;
-                    }
-                }
-            break;
-        }
-
-        /**
-         * Filter
-         */
-        $uris = array_filter( $uris );
-        $uris = array_unique( $uris );
-        
-
-        // Nothing to work with
-        if ( empty( $uris ) )
-            return;
-
-
-        /**
-         * HTTP Client
-         */
-        $client = new Client([
+        $permalink = home_url( wp_make_link_relative( get_permalink( $post_id ) ) );
+        $client    = new Client([
             'http_errors' => false,
         ]);
+        $headers   = array(
+            'User-Agent' => "WPWebArchive/{$this->get_plugin_version()}",
+            'X-WP-Nonce' => wp_create_nonce('create_snapshot'),
+        );
 
+        $content = $client->request('GET', $permalink, [
+            'headers' => $headers
+        ])->getBody()->getContents();
         
         /**
-         * Loop trough
+         * Snapshot DOM HTML
          */
-        foreach ( $uris as $src ) :
+        $dom   = HtmlDomParser::str_get_html($content);
+        $nodes = $dom->find('link, script, img, source');
 
-            $filename = basename($src);
-            $abs_src  = strtok($src, '?');
-
-            // Convert URI from relative to full URL
-            if ( $this->is_relative( $src ) ) {
-                $abs_src = home_url( strtok($src, '?') );
-            }
-
-            /**
-             * Get absolute path and uri
-             */
-            $paths = $this->getPaths( $abs_src );
-
-            /**
-             * Skip if exists
-             */
-            if ( file_exists($paths['path']) )
-            {
-                continue;
-            }
-
-            /**
-             * Get that file
-             */
-            $response = $client->get( $abs_src );
-
-            try
-            {
-                // File does not exist
-                if ( 200 !== $response->getStatusCode() )
-                {
-                    return;
-                }
-
-                // Create directory if it doesn't exist
-                if ( ! is_dir( dirname($paths['path'])) )
-                {
-                    wp_mkdir_p( dirname($paths['path']) );
-                }
-
-                $content = $response->getBody()->getContents();
-
-                switch ( $tag )
-                {
-                    case 'link':
-                        $this->fs->put_contents( $paths['path'], $content );
-                        $node->setAttribute('href', $paths['uri'] );
-                    break;
-
-                    case 'script':
-                        $this->fs->put_contents( $paths['path'], $content );
-                        $node->setAttribute('src', $paths['uri'] );
-                    break;
-
-                    default:
-                        $this->fs->put_contents( $paths['path'], $content );
-                        $node->setAttribute('src', $paths['uri'] );
-                    break;
-                }
-            }
-            catch (RequestException $e) {
-                error_log( $e->getMessage() );
-            }
-        endforeach;
-    }
-
-
-
-    private function getPaths( string $abs_src ) {
-
-        /**
-         * Not from wp-content/uploads directory
-         */
-        if ( false === strpos($abs_src, $this->path_wp['baseurl']) )
-        {   
-            // Absolute path to file
-            $path = sprintf(
-                '%s/%s',
-                $this->path_assets,
-                basename($abs_src)
-            );
-
-            // Absolute URI to file
-            $uri = sprintf(
-                '%s/%s',
-                $this->uri_assets,
-                basename($abs_src)
-            );
-        }
-        else
+        foreach ($nodes as $node )
         {
-            /**
-             * YMD Path in case file is from uploads dir
-             * Eg: 2023/12/thumb-300x175.png
-             */
-            $ydm_path = str_replace($this->path_wp['baseurl'], '', $abs_src );
+            // Skip inline elements without src/href
+            if ( ! $node->hasAttribute('src') && ! $node->hasAttribute('href')  )
+                continue;
 
-            $path = sprintf(
-                '%s%s',
-                $this->get_constant('SNAPSHOTS_UPLOADS_DIR'),
-                $ydm_path
-            );
-
-            $uri = sprintf(
-                '%s%s',
-                $this->get_constant('SNAPSHOTS_UPLOADS_URI'),
-                $ydm_path
-            );
+            $updater = new DOMNodeProcessor( $node, $this->dirs, $fs );
+            $updater->processNode();
         }
 
-        return array(
-            'path' => $path,
-            'uri'  => $uri,
-        );
+        $fs->put_contents( "{$this->dirs['snapshot_path']}/index.html", $dom->save() );
     }
-
-
-    /**
-     * Check if passed url is actual image
-     * @param  [type]  $string [description]
-     * @return boolean         [description]
-     */
-    private function isImageFile($string) {
-        // Define a list of image file extensions
-        $imageExtensions = array('png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp');
-
-        // Extract the extension from the string
-        $extension = strtolower(pathinfo($string, PATHINFO_EXTENSION));
-
-        // Check if the extension is in the list of image file extensions
-        return in_array($extension, $imageExtensions);
-    }
-
 
 
     /**
      * Generate directory where to save
-     * @param  \WP_Post $post 
-     * @return [type]         
      */
-    private function generate_snapshot_directory( $post, $time ) {
+    private function generate_snapshot_directory( $post_id ) {
 
-        $now = date('Y/m/d');
-        
-        // Absolute path to where HTML copies of pages are saved
-        // localhost/wp-c
-        $this->path_base = sprintf(
-            '%s/%s/%d/%d',
-            $this->get_constant('SNAPSHOTS_BASE_DIR'),
-            $now,
-            $post->ID,
-            $time
-        );
+        $now        = gmdate('Y/m/d');
+        $time       = gmdate('U');
+        $baseDir    = $this->get_constant('SNAPSHOTS_BASE_DIR');
+        $baseUri    = content_url($this->get_constant('SNAPSHOTS_BASE_URI'));
 
-        // URL
-        $this->uri_base = sprintf(
-            '%s/%s/%d/%d',
-            content_url($this->get_constant('SNAPSHOTS_BASE_URI')),
-            $now,
-            $post->ID,
-            $time
-        );
+        // Consolidating directories and URIs into a single array
+        $paths = [
+            'snapshot_path' => "{$baseDir}/{$now}/{$post_id}/{$time}",
+            'assets_path'   => "{$baseDir}/{$now}/{$post_id}/{$time}/assets",
+            'json_path'     => "{$baseDir}/{$now}/{$post_id}/{$time}/json",
+            'snapshot_uri'  => "{$baseUri}/{$now}/{$post_id}/{$time}",
+            'assets_uri'    => "{$baseUri}/{$now}/{$post_id}/{$time}/assets",
+            'uploads_path'  => $this->get_constant('SNAPSHOTS_UPLOADS_DIR'),
+            'uploads_uri'   => $this->get_constant('SNAPSHOTS_UPLOADS_URI'),
+            'home_url'      => untrailingslashit( home_url() ),
+            'theme_url'     => untrailingslashit( get_stylesheet_directory_uri() )
+        ];
 
-        $this->path_assets = $this->path_base . '/assets';
-        $this->path_json   = $this->path_base . '/json';
-        $this->uri_assets  = $this->uri_base . '/assets';
+        $this->dirs = array_merge( $paths, wp_upload_dir() );
 
-        // Create base dir
-        $created = wp_mkdir_p( $this->path_base );
-
-        // Create directory where to save assets
-        if ( $created ) {
-
-            // Save assets
-            wp_mkdir_p( $this->path_assets );
-
-            // Where to save JSON copy of page
-            wp_mkdir_p( $this->path_json );
+        // Create directories
+        if (wp_mkdir_p($this->dirs['snapshot_path']))
+        {
+            wp_mkdir_p($this->dirs['assets_path']);
+            wp_mkdir_p($this->dirs['json_path']);
         }
     }
 }

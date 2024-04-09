@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 
 const SnapshotPager = ({ args, snapshots, onPageSelect }) => {
-	const [items, setItems] = useState([]);
+	const [items, setItems] = useState({
+		found: 0,
+		pages: 1,
+		posts: [],
+	});
 	const [current, setCurrent] = useState(1);
 	/**
 	 * Set snapshots data

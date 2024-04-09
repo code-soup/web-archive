@@ -82,7 +82,7 @@ class Init {
     		return;
 
         $snap = new Snapshot();
-        $snap->save_html_snapshot( $snapshot_id );
+        $snap->do_snapshot( $snapshot_id );
     }
 
 	
@@ -126,15 +126,6 @@ class Init {
 	        'Dashboard',
 	        'manage_webarchive',
 	        'web-archive',
-	        array( &$this, 'render_dashboard'),
-	    );
-
-	    add_submenu_page(
-	        'web-archive',
-	        'Settings',
-	        'Settings',
-	        'manage_webarchive',
-	        'settings',
 	        array( &$this, 'render_dashboard'),
 	    );
 	}

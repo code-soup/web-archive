@@ -130,13 +130,11 @@ final class Init {
 		// new I18n();
 
 		// WP Admin related stuff.
-		new Admin\Init();
+		new Admin\Init;
 
 		// Init class
-		new Core\Init();
-
-		// Public related stuff.
-		// new Frontend\Init();
+		new Core\Init;
+		new Core\Settings_Page;
 
 		// Run all hooks
 		$this->run();
