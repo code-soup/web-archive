@@ -131,7 +131,7 @@ trait HelpersTrait {
 
     private function is_relative( $uri ) {
 
-        $parts = parse_url($uri);
+        $parts = wp_parse_url($uri);
 
         // Check if the "scheme" component is not set, indicating a relative URI
         return ( !isset($parts["scheme"]) );

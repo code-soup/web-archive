@@ -20,7 +20,7 @@ const fetchSnapshots = (queryParams = {}) => {
 		headers: {
 			'Content-Type': 'application/json',
 			Accept: 'application/json',
-			// 'X-WP-Nonce': window.WebArchive.nonce,
+			'X-WP-Nonce': window.WebArchive.nonce,
 		},
 	});
 };

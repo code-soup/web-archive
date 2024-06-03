@@ -95,11 +95,10 @@ class SnapshotController {
      */
     public function get_items_permissions_check( \WP_REST_Request $request ) {
 
-        $user_login = \get_current_user();
+        $wp_user = wp_get_current_user();
 
-        if ( ! empty($user_login) )
+        if ( ! empty($wp_user) )
         {
-            $wp_user = get_user_by('slug', $user_login);
             return $wp_user->has_cap('manage_snapshots');
         }
 

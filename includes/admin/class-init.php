@@ -90,7 +90,7 @@ class Init {
             'WebArchive',
             array(
             	'root'     => get_rest_url(),
-                'nonce'    => wp_create_nonce( 'wa_wp_nonce' ),
+                'nonce'    => wp_create_nonce( 'wp_rest' ),
                 'ajax_url' => admin_url( 'admin-ajax.php' ),
                 'post_id'  => get_the_ID(),
             )

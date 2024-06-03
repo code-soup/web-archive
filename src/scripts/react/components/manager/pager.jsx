@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 
 const SnapshotPager = ({ args, snapshots, onPageSelect }) => {
-	const [items, setItems] = useState([]);
+	const [items, setItems] = useState({
+		found: 0,
+		pages: 1,
+		posts: [],
+	});
 	const [current, setCurrent] = useState(1);
 	/**
 	 * Set snapshots data
@@ -11,7 +15,12 @@ const SnapshotPager = ({ args, snapshots, onPageSelect }) => {
 	}, [snapshots]);
 
 	// Remove pager from dom
-	if (snapshots.found === 0) {
+	if (items.length === 0) {
+		return;
+	}
+
+	// Remove pager from dom
+	if (items.found === 0) {
 		return;
 	}
 
@@ -28,7 +37,6 @@ const SnapshotPager = ({ args, snapshots, onPageSelect }) => {
 	};
 
 	const goToPage = (event, anchorElement) => {
-		// console.log(event, anchorElement);
 		event.preventDefault();
 
 		const pageNumber = parseInt(anchorElement.getAttribute('data-page'));

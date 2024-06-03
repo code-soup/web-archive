@@ -4,15 +4,15 @@ defined('WPINC') || die;
 
 /**
  * Plugin Name: Web Archive
- * Plugin URI: https://github.com/code-soup/content-changelog
- * Description: Track content changes on WordPress website for complience purposes
- * Version: 0.0.1
+ * Plugin URI: https://github.com/code-soup/web-archive
+ * Description: Automatically creates HTML copies of your posts and pages when they're published, allowing you to track every version.
+ * Version: 1.0.0
  * Requires at least: 6.0
- * Requires PHP: 7.4
+ * Requires PHP: 8.1
  * Author: Code Soup
  * Author URI: https://www.codesoup.co
- * License: GPL-3.0+
- * Text Domain: web-archive
+ * License: GPL-2.0-or-later
+ * Text Domain: webarchive
  */
 
 register_activation_hook( __FILE__, function() {

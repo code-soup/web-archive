@@ -42,31 +42,35 @@ const SnapshotLoopItem = ({ snapshots, onSnapshotSelect }) => {
 
 	return (
 		<tbody>
-			{posts.map((item, index) => (
-				<tr key={index}>
-					<td>{item.post.post_modified}</td>
-					<td>{item.post.post_title}</td>
-					<td>
-						<a
-							href={item.post.permalink}
-							className='item-permalink'
-						>
-							{item.post.permalink}
-						</a>
-					</td>
-					<td>{item.post.new_status}</td>
-					<td>{item.user.display_name}</td>
-					<td>
-						<button
-							className='button button-primary'
-							data-snapshot-id={item.id}
-							onClick={viewSnapshot}
-						>
-							View Changes
-						</button>
-					</td>
-				</tr>
-			))}
+			{posts.map((item, index) => {
+				if (null === item.post) return null;
+
+				return (
+					<tr key={index}>
+						<td>{item.post.post_modified}</td>
+						<td>{item.post.post_title}</td>
+						<td>
+							<a
+								href={item.post.permalink}
+								className='item-permalink'
+							>
+								{item.post.permalink}
+							</a>
+						</td>
+						<td>{item.post.new_status}</td>
+						<td>{item.user.display_name}</td>
+						<td>
+							<button
+								className='button button-primary'
+								data-snapshot-id={item.id}
+								onClick={viewSnapshot}
+							>
+								View
+							</button>
+						</td>
+					</tr>
+				);
+			})}
 		</tbody>
 	);
 };

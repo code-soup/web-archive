@@ -16,6 +16,8 @@
 		background: white;
 		text-align: right;
 		box-sizing: border-box;
+		box-shadow: 1px 0 0 0 black;
+		border-bottom: 1px solid #eee;
 	}
 
 	#iframe-wrap {
@@ -25,6 +27,7 @@
 		position: relative;
 		max-width: 100%;
 		max-height: calc(100vh - 40px);
+		background: white;
 	}
 
 	iframe {

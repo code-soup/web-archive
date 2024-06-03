@@ -1,54 +1,55 @@
-## WordPress Plugin Boilerplate
+# Web Archive
 
-Updated verision of [WordPress Plugin Boilerplate](https://github.com/DevinVinson/WordPress-Plugin-Boilerplate).
-Includes a Webpack build script and webpack-dev-server for local development.
-Integrates PHP namespacing and PSR-4 autoloader for better experience.
+Contributors: codesoup
+Tags: backup, archive, versioning
+Requires at least: 5.2
+Tested up to: 5.7
+Requires PHP: 8.1
+Stable tag: 1.0.0
+License: GPL-2.0-or-later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-## Setup
+Automatically creates HTML copies of your posts and pages when they're published, allowing you to track every version.
 
-Follow [Setup instructions here](https://github.com/code-soup/wordpress-plugin-boilerplate/wiki/04.-Installation)
+## Description
 
-## Issues
-
-Please use [Github issues](https://github.com/code-soup/wordpress-plugin-boilerplate/issues) to submit any bugs you may find.
-
-## Documentation
-
-Plugin documentation with instalation instruction and best practices can be found at [wiki page](https://github.com/code-soup/wordpress-plugin-boilerplate/wiki).
+The Web Archive plugin for WordPress provides a simple yet powerful way to create HTML copies of pages or any post type upon their publication. This functionality allows website owners and administrators to keep track of all previous versions of the same page or post, ensuring that changes, updates, and iterations are recorded and retrievable at any moment. This is especially useful for content management, auditing, and compliance purposes.
 
 ## Features
 
--   Sass for stylesheets
--   Stylelint
--   ES6 with Babel for JavaScript
--   ESLint
--   [Vue.js](https://vuejs.org/) support (without VueX)
--   [Webpack 5](https://webpack.github.io) build script for frontend and wp-admin assets
--   [Webpack dev server](https://github.com/webpack/webpack-dev-server) with live reloading and HMR
--   PSR-4 Autoloader
--   [SVG Spritemap by cascornelissen](https://github.com/cascornelissen/svg-spritemap-webpack-plugin)
+-   **Automatic Archiving:** Automatically creates an HTML copy of a page or post when it is published or updated.
+-   **Custom Post Type Support:** Works with any WordPress post type, including custom post types, offering flexibility in archiving various content.
+-   **Archive Management:** Easy-to-use interface to view archived versions directly from the WordPress admin dashboard.
+-   **Performance Optimized:** Designed with performance in mind, ensuring minimal impact on site speed.
 
-## Requirements
+## Installation
 
-Make sure all dependencies have been installed before moving on:
+1. **Upload Plugin:** Download the Web Archive plugin and upload it to your WordPress website via the WordPress Dashboard under Plugins > Add New > Upload Plugin.
+2. **Activate:** Once uploaded, activate the Web Archive plugin through the 'Plugins' menu in WordPress.
+3. **Configuration:** Access the Web Archive settings through the WordPress dashboard to configure any options according to your needs.
 
--   [WordPress](https://wordpress.org/) >= 5.0
--   [PHP](http://php.net/manual/en/install.php) >= 7.4
--   [Composer](https://getcomposer.org/download/)
--   [Node.js](http://nodejs.org/) >= 18
--   [Yarn](https://yarnpkg.com/en/docs/install)
+## Usage
 
-## Coding Standards
+Once activated, the Web Archive plugin works automatically. Every time a post or page is published or updated, an HTML copy is created and stored. These copies can be accessed through the Web Archive menu in the WordPress dashboard.
 
--   `wpcs` : analyze code against the WordPress coding standards with PHP_CodeSniffer.
--   `cbf` : fix coding standards warnings/errors automatically with PHP Code Beautifier.
--   `lint` : lint PHP files against parse errors.
+## Frequently Asked Questions
 
-To check a file against the WordPress coding standards or to automatically fix coding standards, simply specify the file's location:
+**Q: Does Web Archive slow down my website?**
+A: No, Web Archive is designed to operate with minimal performance impact, ensuring your site remains fast and responsive.
 
--   `wpcs includes/class-init.php`
--   `cbf includes/class-init.php`
+**Q: Can I archive custom post types?**
+A: Yes, Web Archive supports all post types, including custom ones, giving you complete archiving flexibility.
 
-#### License
+## Changelog
 
-This project is licensed under the [GPL license](http://www.gnu.org/licenses/gpl-3.0.txt).
+### 1.0.0
+
+-   Initial release: Basic archiving functionality for all public post types
+
+## Support
+
+For questions, issues, and support regarding the Web Archive plugin, please visit the [plugin support forum](#).
+
+## License
+
+The Web Archive plugin is open-source software licensed under the GPL v2.0 license.
