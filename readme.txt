@@ -8,7 +8,7 @@ Requires PHP: 8.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Automatically creates HTML copies of your posts and pages when they\'re published, allowing you to track every version.
+Automatically creates HTML copies of your posts and pages when they're published, allowing you to track every version.
 
 == Description ==
 
@@ -45,3 +45,6 @@ Yes, Web Archive supports all post types, including custom ones, giving you comp
 5. Link to switch to the classic editor while editing a post in the block editor. Visible when the users are allowed to switch editors.
 6. Network settings to select the default editor for the network and allow site admins to change it.
 7. The "Switch to classic editor" link.
+
+
+svn copy . https://plugins.svn.wordpress.org/web-archive -m "Creating tag 1.0.0 from local version"

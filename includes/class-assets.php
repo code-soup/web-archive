@@ -62,7 +62,6 @@ class Assets {
 
             if (is_wp_error($response)) {
                 $error_message = $response->get_error_message();
-                error_log("Error retrieving manifest: $error_message");
             }
             else {
                 $this->manifest = json_decode(wp_remote_retrieve_body($response), true);
