@@ -1,9 +1,9 @@
 {
-    "admin.css": "styles/admin-a64d66fc233a82729ec4.css",
-    "admin.js": "scripts/admin-a64d66fc233a82729ec4.js",
-    "common.css": "styles/common-a64d66fc233a82729ec4.css",
-    "common.js": "scripts/common-a64d66fc233a82729ec4.js",
-    "scripts/159-a64d66fc233a82729ec4.js": "scripts/159-a64d66fc233a82729ec4.js",
-    "scripts/admin-a64d66fc233a82729ec4.js.LICENSE.txt": "scripts/admin-a64d66fc233a82729ec4.js.LICENSE.txt",
-    "vendor/index.js": "scripts/vendor/index-a64d66fc233a82729ec4.js"
+    "admin.css": "styles/admin-2f0ab660545cf480e22c.css",
+    "admin.js": "scripts/admin-2f0ab660545cf480e22c.js",
+    "common.css": "styles/common-2f0ab660545cf480e22c.css",
+    "common.js": "scripts/common-2f0ab660545cf480e22c.js",
+    "scripts/159-2f0ab660545cf480e22c.js": "scripts/159-2f0ab660545cf480e22c.js",
+    "scripts/admin-2f0ab660545cf480e22c.js.LICENSE.txt": "scripts/admin-2f0ab660545cf480e22c.js.LICENSE.txt",
+    "vendor/index.js": "scripts/vendor/index-2f0ab660545cf480e22c.js"
 }

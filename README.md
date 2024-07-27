@@ -21,6 +21,11 @@ Once activated, the Web Archive plugin works automatically. Every time a post or
 
 ## Changelog
 
+### 1.0.1
+
+-   Bump tested up to
+-   Dependencies update
+
 ### 1.0.0
 
 -   Initial release: Basic archiving functionality for all public post types

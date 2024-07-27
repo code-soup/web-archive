@@ -6,8 +6,8 @@ defined('WPINC') || die;
  * Plugin Name: Web Archive
  * Plugin URI: https://github.com/code-soup/web-archive
  * Description: Automatically creates HTML copies of your posts and pages when they're published, allowing you to track every version.
- * Version: 1.0.0
- * Requires at least: 6.0
+ * Version: 1.0.1
+ * Requires at least: 6.6
  * Requires PHP: 8.1
  * Author: Code Soup
  * Author URI: https://www.codesoup.co
